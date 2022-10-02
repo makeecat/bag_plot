@@ -1,8 +1,12 @@
 #!/usr/bin/python
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
-
-plt.rcParams['lines.linewidth'] = 4
+from cycler import cycler
+default_cycler = (cycler(color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']) +
+                  cycler(linestyle=['--', '-', ':', '-.']))
+plt.rcParams['lines.linewidth'] = 2
+plt.rcParams['axes.prop_cycle'] = default_cycler
 plt.rcParams['xtick.labelsize'] = 14
 plt.rcParams['ytick.labelsize'] = 14
 
@@ -39,21 +43,25 @@ def plot_data(data, variables_selected, topics_selected):
     k = 1
     for var in variables_selected:
         ax[var] = plt.subplot(n_plot, 1 , k)
-        ax[var].hold(True)
+        #ax[var].hold(True)
         ax[var].grid(True)
-        plt.xlabel("time(s)", fontsize=20)
+        plt.xlabel("time(s)", fontsize=15)
         if(var=="vx" or var=="vy" or var=="vz"):
-            plt.ylabel(var+"(m/s)", fontsize=20)
+            plt.ylabel(var+"(m/s)", fontsize=15)
         elif(var=="roll" or var=="pitch" or var=="yaw"):
-            plt.ylabel(var+"(rad)", fontsize=20)
+            plt.ylabel(var+"(rad)", fontsize=15)
+        elif(var=="x" or var=="y" or var=="z"):
+            plt.ylabel(var+"(m)", fontsize=15)
         else:
-            plt.ylabel(var, fontsize=20)
+            plt.ylabel(var, fontsize=15)
 
         k += 1
         for topic in topics_selected:
             if var in data[topic]:
-             ax[var].plot(data[topic]['t']-data[topic]['t'][0], data[topic][var], label=topic+"/"+var)
-             ax[var].legend(bbox_to_anchor=(0.3, 0.9))
+             #ax[var].plot(data[topic]['t']-data[topic]['t'][0], data[topic][var], label=topic+"/"+var)
+             ax[var].plot(data[topic]['t'], data[topic][var], label=topic+"/"+var)
+             #ax[var].legend(bbox_to_anchor=(0.3, 0.9), loc='upper left')
+             ax[var].legend(loc='upper left')
         if not verticalLineX_ == None:
              drawVerticalLine(ax[var])
         if not cur_xlim_ == None:
